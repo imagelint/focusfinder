@@ -4,7 +4,8 @@
   "description": "",
   "main": "nocaps.js",
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "tsv": "^0.2.0"
   },
   "devDependencies": {},
   "scripts": {
