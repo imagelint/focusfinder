@@ -2,3 +2,7 @@ download/images
 .vscode/
 node_modules/
 norm_images/
+100_images/
+100_norm_images/
+log/
+*.pkl
