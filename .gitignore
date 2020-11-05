@@ -1,4 +1,6 @@
-download/images
+/download/images
+/download/unsplash-images
+/download/photos.tsv000
 .vscode/
 node_modules/
 norm_images/
