@@ -5,12 +5,12 @@ const tsv = require('tsv')
 // The free "Lite dataset" contains it.
 const data = tsv.parse(fs.readFileSync('./photos.tsv000', 'utf8'))
 let download = async function() {
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 8067; i < data.length; i++) {
         console.log(i)
         const entry = data[i]
         let request = fetch(entry.photo_image_url + '?w=244&h=244&fit=fill&fill=solid&fill-color=000000')
             .then(res => {
-                const dest = fs.createWriteStream('./unsplash-images/' + entry.photo_id + '.jpg')
+                const dest = fs.createWriteStream('./images/raw_images/unsplash/' + entry.photo_id + '.jpg')
                 res.body.pipe(dest)
             })
         if (i%40===0){
