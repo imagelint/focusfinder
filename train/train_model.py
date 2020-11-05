@@ -20,7 +20,7 @@ file_path = os.path.dirname(os.path.realpath(__file__))
 dir_path = "/".join(file_path.split("/")[0:-1])
 path = Path(dir_path)
 labels_path = path/'download/labels/norm_labels_4000.csv'
-images_path = path/'download/norm_images'
+images_path = path/'download/images/norm_images'
 
 # load csv
 df = pd.read_csv(labels_path, names=['name','x_p','y_p'], header=0)
@@ -37,22 +37,24 @@ imgs = DataBlock(
 )
 
 # create dataloader
-dls = imgs.dataloaders(images_path, bs=2)
+# Adjust the batch size to fit your hardware. A higher batch size needs more (gpu) ram.
+batch_size = 8
+dls = imgs.dataloaders(images_path, bs=batch_size)
 print("Data loaded successfully")
 
 # load pretrained model
 learn = cnn_learner(dls, resnet18, y_range=(-1,1))
 
 # train model with epochs and learn_rate (good learn rate can be found with fastai functin learn.lr_find())
-epochs = 3
-train_rate = 2e-5
+epochs = 30
+train_rate = 2e-4
 
 print("Starting training with train_rate {} for {} epochs\n".format(train_rate, epochs))
 learn.fine_tune(epochs, train_rate)
 
 # save model with unique name
 time_now = time.localtime()
-model_name = str(time_now.tm_year) + str(time_now.tm_mon) + str(time_now.tm_mday) + str(time_now.tm_hour) + str(time_now.tm_min) + str(time_now.tm_sec) + "_model.pkl"
+model_name = str(time_now.tm_year) + str(time_now.tm_mon) + str(time_now.tm_mday) + str(time_now.tm_hour) + str(time_now.tm_min) + str(time_now.tm_sec) + "-" + str(epochs) + "epochs-" + str(train_rate) + "trainrate_model.pkl"
 learn.export(('./models/'+model_name))
 
 print('training done')
