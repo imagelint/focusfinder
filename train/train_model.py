@@ -30,7 +30,7 @@ imgs = DataBlock(
 
 # create dataloader
 # Adjust the batch size to fit your hardware. A higher batch size needs more (gpu) ram.
-batch_size = 8
+batch_size = 10
 dls = imgs.dataloaders(images_path, bs=batch_size)
 print("Data loaded successfully")
 
@@ -38,7 +38,7 @@ print("Data loaded successfully")
 learn = cnn_learner(dls, resnet18, y_range=(-1,1))
 
 # train model with epochs and learn_rate (good learn rate can be found with fastai functin learn.lr_find())
-epochs = 3
+epochs = 100
 train_rate = 4e-5 # lr_min=0.012022644281387329, lr_steep=3.630780702224001e-05
 
 print("Starting training with train_rate {} for {} epochs\n".format(train_rate, epochs))

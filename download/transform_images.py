@@ -1,7 +1,7 @@
 import pandas as pd
 import cv2
 
-labels_path = './labels/labels_4000.csv'
+labels_path = './labels/labels_unsplash.csv'
 df = pd.read_csv(labels_path, names=['name','x_p','y_p'], header=None)
 
 # Load image
@@ -10,7 +10,7 @@ focus_points = []
 df2 = df
 for i, file_name in enumerate(df['name']):
   print(file_name)
-  original_img = cv2.imread(('./images/raw_images/nocaps/'+file_name))
+  original_img = cv2.imread(('./images/raw_images/unsplash/'+file_name))
   # fill with black to create square img
   width, height, color = original_img.shape
   p_height, p_width = [0, int((height-width)/2)] if width < height else [int((width - height)/2), 0]
@@ -30,4 +30,4 @@ for i, file_name in enumerate(df['name']):
   df2['x_p'][i] = (x_focus_original * pxl) / pxl_original
   df2['y_p'][i] = (y_focus_original * pxl) / pxl_original
 
-df2.to_csv(r'labels/norm_labels_4000.csv')
+df2.to_csv(r'labels/norm_labels_unsplash.csv')
