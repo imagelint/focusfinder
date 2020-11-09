@@ -3,10 +3,53 @@ import re
 import time
 import os
 
+def compare_models():
+    # set those two parameters
+    epochs = 100
+    batch_size = 8
+
+    # resnet 18
+    # lr_min=0.33113112449646, lr_steep=0.0691830962896347
+    # resnet 34
+    # lr_min=0.33113112449646, lr_steep=1.0964781722577754e-06
+    # resnet 50
+    # lr_min=0.33113112449646, lr_steep=6.309573450380412e-07
+
+    model_names = {
+        'resnet18':resnet18, 
+        'resnet34':resnet34,
+        'resnet50':resnet50,
+        }
+
+    learn_rates = {
+        'resnet18':[0.3,7e-2],
+        'resnet34':[0.3,1e-6],
+        'resnet50':[0.3,6e-7],
+    }
+    
+    results_df = pd.DataFrame(columns=['name','learn_rate','res_1','res_2'])
+
+    for _name, _model in model_names.items():
+        for _learn_rate in learn_rates[_name]:
+            print('Model {} with learn_rate {}'.format(_name,_learn_rate))
+            res = train_model(model_arch=_model, learn_rate=_learn_rate, epochs=epochs,bs=batch_size)
+
+            results_df = results_df.append({
+                'name': _name,
+                'learn_rate': _learn_rate, 
+                'res_1': res[0],
+                'res_2': res[1],
+            },ignore_index=True)
+
+    print(results_df)
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    dir_path = "/".join(file_path.split("/")[0:-1])
+    path = Path(dir_path)
+    result_csv_path = path/'models/model_comparison_result.csv'
+    results_df.to_csv(result_csv_path)
+    
+
 def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
-    #########################################################################
-    #                         set parameters                                #
-    #########################################################################
 
     # set paths for images and label.csv
     file_path = os.path.dirname(os.path.realpath(__file__))
@@ -14,19 +57,11 @@ def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
     path = Path(dir_path)
     labels_path = path/'download/labels/train_labels.csv'
     images_path = path/'download/images/norm_images'
-    final_model_pathpath/'train/models/'
-    # good learn rate can be found with fastai functin learn.lr_find()
-    #
-    # for resnet 18 with train_labels.csv:
-    # lr_min=0.012022644281387329, lr_steep=3.630780702224001e-05
+    final_model_path = path/'train/models/'
 
     model_metrics = mse
 
-    #########################################################################
-    #                           main code                                   #
-    #########################################################################
-
-    print("Starting Focusfinder train script")
+    #print("Starting Focusfinder train script")
 
     def get_focus_point(path_name):
         dfb = next(iter(df[df['name']==path_name.name].index), ('no match for '+path_name.name))
@@ -47,7 +82,7 @@ def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
     # create dataloader
     # Adjust the batch size to fit your hardware. A higher batch size needs more (gpu) ram.
     dls = imgs.dataloaders(images_path, bs=bs)
-    print("Data loaded successfully")
+    #print("Data loaded successfully")
 
     # load pretrained model
     learn = cnn_learner(dls, model_arch, y_range=(-1,1), metrics=model_metrics)
@@ -68,5 +103,6 @@ def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
 
     # should return final mse
     return res
+
 if __name__=='__main__':
-    res = train_model()
+    compare_models()

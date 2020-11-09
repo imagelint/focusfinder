@@ -6,4 +6,6 @@ log/
 100_images/
 100_norm_images/
 
+__pycache__/
+
 *.csv
