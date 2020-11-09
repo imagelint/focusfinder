@@ -14,7 +14,7 @@ def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
     path = Path(dir_path)
     labels_path = path/'download/labels/train_labels.csv'
     images_path = path/'download/images/norm_images'
-    final_model_pathpath/'train/models/'
+    final_model_path = path/'models/'
     # good learn rate can be found with fastai functin learn.lr_find()
     #
     # for resnet 18 with train_labels.csv:

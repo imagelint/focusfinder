@@ -5,8 +5,8 @@ import os
 
 def compare_models():
     # set those two parameters
-    epochs = 100
-    batch_size = 8
+    epochs = 30
+    batch_size = 32
 
     # resnet 18
     # lr_min=0.33113112449646, lr_steep=0.0691830962896347
@@ -48,6 +48,19 @@ def compare_models():
     result_csv_path = path/'models/model_comparison_result.csv'
     results_df.to_csv(result_csv_path)
     
+def get_dataframe():
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    dir_path = "/".join(file_path.split("/")[0:-1])
+    path = Path(dir_path)
+    labels_path = path/'download/labels/train_labels.csv'
+    df = pd.read_csv(labels_path)
+    return df
+
+df = get_dataframe()
+
+def get_focus_point(path_name):
+    dfb = next(iter(df[df['name']==path_name.name].index), ('no match for '+path_name.name))
+    return tensor([df['x_p'][dfb], df['y_p'][dfb]])
 
 def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
 
@@ -55,20 +68,13 @@ def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
     file_path = os.path.dirname(os.path.realpath(__file__))
     dir_path = "/".join(file_path.split("/")[0:-1])
     path = Path(dir_path)
-    labels_path = path/'download/labels/train_labels.csv'
     images_path = path/'download/images/norm_images'
-    final_model_path = path/'train/models/'
+    final_model_path = path/'models/'
 
     model_metrics = mse
 
     #print("Starting Focusfinder train script")
 
-    def get_focus_point(path_name):
-        dfb = next(iter(df[df['name']==path_name.name].index), ('no match for '+path_name.name))
-        return tensor([df['x_p'][dfb], df['y_p'][dfb]])
-
-    # load csv
-    df = pd.read_csv(labels_path)
     # define fastai datablock
     imgs = DataBlock(
         blocks=(ImageBlock, PointBlock),
@@ -97,7 +103,7 @@ def train_model(model_arch=resnet18, learn_rate=4e-5, epochs=10, bs=8):
     # save model with unique name
     time_now = time.localtime()
     model_name = str(time_now.tm_year) + str(time_now.tm_mon) + str(time_now.tm_mday) + str(time_now.tm_hour) + str(time_now.tm_min) + str(time_now.tm_sec) + "-" + str(epochs) + "epochs-" + str(learn_rate) + "trainrate_model.pkl"
-    learn.export((final_model_path+model_name))
+    learn.export((final_model_path/model_name))
 
     print('Training done and model {} saved'.format(model_name))
 

@@ -78,3 +78,12 @@ The advantage of a simple python script that it only has to be executed once aft
 4. Use trained model  
 For now the only way how to use a trained model can be seen in /focusfinder/webserver/test_fastai.py.  
 Later there will also be a webserver, which is not working yet. 
+
+## Running in docker
+Execute the following command to build the docker container
+
+    docker build -t focusfinder .
+
+After that's done, start the docker container while making sure to add your gpus and sufficient shared memory
+
+    docker run --gpus all --shm-size=1024m -it --rm -v $PWD:/tmp -w /tmp focusfinder bash
