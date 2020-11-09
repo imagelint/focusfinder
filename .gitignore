@@ -5,3 +5,5 @@ log/
 *.pkl
 100_images/
 100_norm_images/
+
+*.csv
