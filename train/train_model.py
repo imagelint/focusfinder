@@ -11,9 +11,9 @@ import os
 batch_size = 10
 model_arch = resnet18
 model_metrics = mse
-epochs = 1
-learn_rate = 4e-5 
-# good learn rate can be found with fastai functin learn.lr_find()
+epochs = 10
+learn_rate = 0.0005248074419796466
+# good learn rate can be found with fastai function learn.lr_find()
 
 # set paths for images and label.csv
 file_path = os.path.dirname(os.path.realpath(__file__))
@@ -52,6 +52,7 @@ print("Data loaded successfully")
 
 # load pretrained model
 learn = cnn_learner(dls, model_arch, y_range=(-1,1), metrics=model_metrics)
+#print(learn.lr_find())
 
 # train model with epochs and learn_rate 
 print("Starting training with learn_rate {} for {} epochs\n".format(learn_rate, epochs))
