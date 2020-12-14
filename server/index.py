@@ -15,7 +15,7 @@ def index():
     focus_point = predict_focus_point(model, image_path)
     if focus_point is None:
         return jsonify(error=str('Image not found')), 404
-    return jsonify([float(focus_point[0]), float(focus_point[1])])
+    return jsonify([float(focus_point[0]) / 244, float(focus_point[1]) / 244])
 
 # TODO: Only expose webserver on localhost
 if __name__ == '__main__':
