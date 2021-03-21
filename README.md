@@ -1,8 +1,11 @@
 # Focusfinder
 Focusfinder is a tool which finds a focus-point for any given image. this focus-point can then, for example, be used as a center point for cropping.
 
-a neural network is trained with [fastai](https://www.fast.ai/) to find the focus-point.
+A neural network is trained with [fastai](https://www.fast.ai/) to find the focus-point.
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/imagelint/focusfinder/main/graphic.jpg" alt="A graphic of a skier mid flight demonstrating how focusfinder extracts the relevant part of the image when cropping it" width="838">
+</p>
 
 
 ## Quickstart
